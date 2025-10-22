@@ -12,12 +12,14 @@ import (
 func main() {
 	r := gin.Default()
 
-	// http://localhost:8080/api/pegawai_encrypt_nip?nip=17231237
 	api := r.Group("/api")
 	{
+
+		// http://localhost:8080/api/pegawai_encrypt_nip?nip=17231237
 		api.GET("/pegawai_encrypt_nip", func(ctx *gin.Context) {
 			nip := ctx.Query("nip")
 
+			// sec.EncryptURLSafe([]byte(nip_database), []byte("INIadalahEncryptionKey1234567890"))
 			nipEncrypted, err := sec.EncryptURLSafe([]byte(nip), []byte("INIadalahEncryptionKey1234567890"))
 			if err != nil {
 				ctx.JSON(http.StatusOK, gin.H{"message": "failed", "error": err, "nip": nil})
