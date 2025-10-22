@@ -5,7 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/faizaldr/bang-al/security/crypto"
+	sec "github.com/faizaldr/bang-al/security"
+	// "Errors"
 )
 
 func main() {
@@ -17,7 +18,11 @@ func main() {
 		api.GET("/pegawai", func(ctx *gin.Context) {
 			nip := ctx.Query("nip")
 
-			nipEncrypted := crypto.EncryptURLSafe(nip, "INIadalahEncryptionKey")
+			nipEncrypted, err := sec.EncryptURLSafe([]byte(nip), []byte("INIadalahEncryptionKey"))
+			if err != nil {
+				ctx.JSON(http.StatusOK, gin.H{"message": "failed", "error": err, "nip": nil})
+				return
+			}
 
 			ctx.JSON(http.StatusOK, gin.H{"nip": nipEncrypted})
 		})
