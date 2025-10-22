@@ -18,7 +18,7 @@ func main() {
 		api.GET("/pegawai", func(ctx *gin.Context) {
 			nip := ctx.Query("nip")
 
-			nipEncrypted, err := sec.EncryptURLSafe([]byte(nip), []byte("INIadalahEncryptionKey"))
+			nipEncrypted, err := sec.EncryptURLSafe([]byte(nip), []byte("INIadalahEncryptionKey1234567890"))
 			if err != nil {
 				ctx.JSON(http.StatusOK, gin.H{"message": "failed", "error": err, "nip": nil})
 				return
