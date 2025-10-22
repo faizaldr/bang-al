@@ -37,3 +37,39 @@ func EncryptURLSafe(plainttext []byte, key []byte) (string, error) {
 	out := append(nonce, ciphertext...)
 	return b64.EncodeToString(out), nil
 }
+
+func DecryptURLSafe(ciphertext string, key []byte) ([]byte, error) {
+	if len(key) != 32 {
+		return nil, errors.New("kunci harus berupa 32 byte (AES-256)")
+	}
+
+	data, err := b64.DecodeString(ciphertext)
+	if err != nil {
+		return nil, err
+	}
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(data) < gcm.NonceSize() {
+		return nil, errors.New("cipher terlalu pendek")
+	}
+
+	nonce := data[:gcm.NonceSize()]
+	ct := data[gcm.NonceSize():]
+
+	plaintext, err := gcm.Open(nil, nonce, ct, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return plaintext, nil
+}
