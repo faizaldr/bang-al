@@ -37,7 +37,7 @@ func main() {
 				return
 			}
 
-			ctx.JSON(http.StatusOK, gin.H{"nip": nipEncrypted})
+			ctx.JSON(http.StatusOK, gin.H{"nip": string(nipEncrypted)})
 		})
 	}
 	r.Run(":8080")
