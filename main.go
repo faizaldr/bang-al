@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/faizaldr/bang-al/security/crypto"
 )
 
 func main() {
@@ -15,7 +17,9 @@ func main() {
 		api.GET("/pegawai", func(ctx *gin.Context) {
 			nip := ctx.Query("nip")
 
-			ctx.JSON(http.StatusOK, gin.H{"nip": nip})
+			nipEncrypted := crypto.EncryptURLSafe(nip, "INIadalahEncryptionKey")
+
+			ctx.JSON(http.StatusOK, gin.H{"nip": nipEncrypted})
 		})
 	}
 	r.Run(":8080")
